@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GSD Monito Monita — Christmas Gift Exchange &amp; Raffle</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #fdf9f3;
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(185, 28, 28, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 88% 12%, rgba(217, 119, 6, 0.06) 0%, transparent 38%),
+        radial-gradient(circle at 82% 85%, rgba(22, 56, 40, 0.06) 0%, transparent 42%);
+      color: #1c2420;
+    }
+    .font-display {
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+    .candy-stripe {
+      height: 5px;
+      background: repeating-linear-gradient(
+        -45deg,
+        #b91c1c,
+        #b91c1c 10px,
+        #fdfaf5 10px,
+        #fdfaf5 20px,
+        #165b33 20px,
+        #165b33 30px,
+        #fdfaf5 30px,
+        #fdfaf5 40px
+      );
+    }
+    @keyframes snowfall {
+      0% { transform: translateY(-10vh) translateX(0px) rotate(0deg); opacity: 0; }
+      15% { opacity: 0.55; }
+      85% { opacity: 0.55; }
+      100% { transform: translateY(105vh) translateX(24px) rotate(180deg); opacity: 0; }
+    }
+    .snowflake {
+      position: fixed;
+      top: -2rem;
+      color: #c5d6cc;
+      user-select: none;
+      pointer-events: none;
+      z-index: 0;
+      animation: snowfall linear infinite;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.65; transform: scale(0.92); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+    .bulb {
+      animation: twinkle 2.2s ease-in-out infinite;
+    }
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
+    .animate-float {
+      animation: floatSlow 3.2s ease-in-out infinite;
+    }
+    @keyframes spinPulse {
+      0% { transform: scale(1) rotate(0deg); }
+      25% { transform: scale(1.06) rotate(-4deg); }
+      50% { transform: scale(1.1) rotate(4deg); }
+      75% { transform: scale(1.06) rotate(-3deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    .animate-draw {
+      animation: spinPulse 0.45s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-rose-200 selection:text-rose-950 relative overflow-x-hidden">
+
+  <!-- Subtle Falling Snowflakes -->
+  <div aria-hidden="true" class="pointer-events-none">
+    <span class="snowflake text-base" style="left: 6%; animation-duration: 13s; animation-delay: 0s;">&#10052;</span>
+    <span class="snowflake text-xs" style="left: 18%; animation-duration: 17s; animation-delay: 3s;">&#10053;</span>
+    <span class="snowflake text-sm" style="left: 34%; animation-duration: 15s; animation-delay: 6s;">&#10052;</span>
+    <span class="snowflake text-base" style="left: 52%; animation-duration: 14s; animation-delay: 2s;">&#10053;</span>
+    <span class="snowflake text-xs" style="left: 68%; animation-duration: 18s; animation-delay: 5s;">&#10052;</span>
+    <span class="snowflake text-sm" style="left: 84%; animation-duration: 16s; animation-delay: 1s;">&#10053;</span>
+    <span class="snowflake text-base" style="left: 93%; animation-duration: 14s; animation-delay: 7s;">&#10052;</span>
+  </div>
+
+  <!-- Top Header -->
+  <header class="bg-gradient-to-r from-[#123322] via-[#163d28] to-[#1a472f] text-[#faf7f2] sticky top-0 z-30 shadow-md">
+    <div class="candy-stripe"></div>
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 to-rose-700 border border-amber-300/50 flex items-center justify-center shrink-0 shadow-sm">
+          <i data-lucide="gift" class="w-5 h-5 text-amber-100"></i>
+        </div>
+        <div class="min-w-0">
+          <h1 class="font-display text-lg sm:text-xl font-bold tracking-tight truncate flex items-center gap-1.5">
+            <span>GSD Monito Monita</span>
+            <span class="text-amber-300 text-sm" aria-hidden="true">&#10022;</span>
+          </h1>
+          <p class="text-xs text-emerald-100/85 truncate">Christmas Secret Code Name &amp; Wish List Raffle</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <span id="phaseBadge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-800/80 text-emerald-100 border border-emerald-700/60">
+          <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+          Registration
+        </span>
+        <button id="adminToggleBtn" type="button" title="Admin Login" class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-emerald-100 hover:bg-emerald-800/70 transition cursor-pointer">
+          <i data-lucide="shield" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">Admin</span>
+        </button>
+        <button id="resetBtn" type="button" title="Admin only: Start a new GSD Monito Monita" class="hidden inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-emerald-100 hover:bg-emerald-800/70 transition cursor-pointer">
+          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">New Event</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="relative z-10 flex-1 max-w-3xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+
+    <!-- Festive Christmas Lights Divider -->
+    <div class="flex items-center justify-between px-4 py-1.5 rounded-full bg-[#163828]/5 border border-emerald-900/10" aria-hidden="true">
+      <span class="w-2.5 h-2.5 rounded-full bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.7)] bulb" style="animation-delay: 0s;"></span>
+      <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)] bulb" style="animation-delay: 0.3s;"></span>
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 shadow-[0_0_8px_rgba(5,150,105,0.7)] bulb" style="animation-delay: 0.6s;"></span>
+      <span class="w-2.5 h-2.5 rounded-full bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.7)] bulb" style="animation-delay: 0.9s;"></span>
+      <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)] bulb" style="animation-delay: 1.2s;"></span>
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 shadow-[0_0_8px_rgba(5,150,105,0.7)] bulb" style="animation-delay: 1.5s;"></span>
+      <span class="w-2.5 h-2.5 rounded-full bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.7)] bulb" style="animation-delay: 1.8s;"></span>
+      <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)] bulb" style="animation-delay: 0.4s;"></span>
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 shadow-[0_0_8px_rgba(5,150,105,0.7)] bulb" style="animation-delay: 0.8s;"></span>
+    </div>
+
+    <!-- Status Summary Bar (Shows count & code names only; wish lists & screenshots remain hidden) -->
+    <section aria-label="Registration status" class="bg-white/95 rounded-2xl border border-amber-200/80 shadow-sm p-4 sm:p-5 space-y-3.5">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-50 to-amber-50 border border-amber-200 flex items-center justify-center shrink-0">
+            <i data-lucide="trees" class="w-6 h-6 text-[#165b33]"></i>
+          </div>
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-stone-500">GSD Registered Participants</p>
+            <div class="flex items-baseline gap-2">
+              <span id="registeredCount" class="text-2xl sm:text-3xl font-bold text-[#163828]">0</span>
+              <span id="countSubtext" class="text-xs text-stone-500">Wish lists &amp; screenshots remain hidden</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="codeNamesContainer" class="hidden pt-3 border-t border-stone-100">
+        <p class="text-[11px] font-semibold uppercase tracking-wider text-stone-400 mb-2">Registered Code Names</p>
+        <div id="mysteryIcons" class="flex items-center gap-2 flex-wrap"></div>
+      </div>
+    </section>
+
+    <!-- PHASE 1: REGISTRATION VIEW -->
+    <section id="registrationView" class="space-y-6">
+      <div class="bg-white rounded-2xl border border-stone-200/90 shadow-sm overflow-hidden">
+        <div class="bg-gradient-to-r from-[#143d28] via-[#1b4d33] to-[#8c1d24] px-5 sm:px-6 py-4 text-white flex items-center justify-between gap-3 border-b-2 border-amber-400/60">
+          <div>
+            <h2 class="font-display text-lg sm:text-xl font-bold">Drop Your Wish in Santa&rsquo;s Bag</h2>
+            <p class="text-xs sm:text-sm text-amber-100/90 mt-0.5">Your code name, wish list &amp; screenshot will be hidden right after you submit.</p>
+          </div>
+          <i data-lucide="sparkles" class="w-5 h-5 text-amber-300 shrink-0"></i>
+        </div>
+
+        <form id="registerForm" class="p-5 sm:p-6 space-y-5" novalidate>
+          <div>
+            <label for="codeNameInput" class="block text-sm font-semibold text-stone-800 mb-1.5">
+              Code Name <span class="text-rose-600">*</span>
+            </label>
+            <input
+              id="codeNameInput"
+              type="text"
+              maxlength="40"
+              autocomplete="off"
+              placeholder="e.g., Frosty Pine, Midnight Cocoa, Red Velvet"
+              class="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-stone-50/50 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#163828] focus:border-transparent transition text-sm sm:text-base"
+            />
+            <p class="text-xs text-stone-500 mt-1.5">Remember your code name—you will use it during the raffle to draw your match.</p>
+          </div>
+
+          <div>
+            <label for="wishListInput" class="block text-sm font-semibold text-stone-800 mb-1.5">
+              Wish List <span class="text-rose-600">*</span>
+            </label>
+            <textarea
+              id="wishListInput"
+              rows="4"
+              maxlength="400"
+              placeholder="List 2–3 gift ideas, favorite colors, sizes, or things you love..."
+              class="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-stone-50/50 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#163828] focus:border-transparent transition text-sm sm:text-base resize-y"
+            ></textarea>
+            <div class="flex items-center justify-between mt-1">
+              <p class="text-xs text-stone-500">Only the person who picks you will see this.</p>
+              <span id="wishCharCount" class="text-xs text-stone-400">0 / 400</span>
+            </div>
+          </div>
+
+          <div>
+            <label for="wishImageInput" class="block text-sm font-semibold text-stone-800 mb-1.5">
+              Attach Wish List Screenshot <span class="text-xs font-normal text-stone-500">(Optional)</span>
+            </label>
+            <div class="flex flex-wrap items-center gap-3">
+              <label for="wishImageInput" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-stone-300 bg-stone-50 hover:bg-stone-100 text-stone-700 text-xs sm:text-sm font-medium transition cursor-pointer">
+                <i data-lucide="image-plus" class="w-4 h-4 text-[#163828]"></i>
+                Choose Screenshot
+              </label>
+              <input id="wishImageInput" type="file" accept="image/*" class="hidden" />
+              <span id="wishImageName" class="text-xs text-stone-500 truncate max-w-[200px]">No image selected</span>
+            </div>
+            <div id="wishImagePreviewWrap" class="hidden mt-3 relative inline-block">
+              <img id="wishImagePreview" src="" alt="Wish list screenshot preview" class="max-h-40 max-w-full h-auto rounded-xl border border-stone-200 shadow-xs" />
+              <button id="removeWishImageBtn" type="button" title="Remove screenshot" class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center shadow-sm cursor-pointer">
+                <i data-lucide="x" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+
+          <div id="formError" class="hidden rounded-xl bg-rose-50 border border-rose-200 px-3.5 py-2.5 text-sm text-rose-700 flex items-center gap-2">
+            <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
+            <span id="formErrorText"></span>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1">
+            <button
+              type="submit"
+              class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#163828] hover:bg-[#1f4d38] active:scale-[0.99] text-white font-semibold text-sm sm:text-base shadow-sm transition cursor-pointer"
+            >
+              <i data-lucide="lock" class="w-4 h-4"></i>
+              Register &amp; Hide Entry
+            </button>
+
+            <button
+              id="startRaffleBtn"
+              type="button"
+              disabled
+              class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-rose-600 hover:bg-rose-700 disabled:bg-stone-200 disabled:text-stone-400 disabled:cursor-not-allowed text-white font-semibold text-sm sm:text-base shadow-sm transition cursor-pointer"
+            >
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+              Start Raffle
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Privacy Note -->
+      <div class="rounded-2xl bg-amber-50/70 border border-amber-200/80 p-4 flex items-start gap-3 text-xs sm:text-sm text-amber-950">
+        <i data-lucide="shield-check" class="w-5 h-5 text-amber-700 shrink-0 mt-0.5"></i>
+        <div>
+          <p class="font-semibold">Privacy First</p>
+          <p class="text-amber-900/80 mt-0.5">Once someone registers, only their <strong>code name</strong> appears in the GSD Registered Participants list above—their wish list and screenshot stay completely hidden until the raffle. At least <strong>2 participants</strong> are required to start.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHASE 2: RAFFLE VIEW -->
+    <section id="raffleView" class="hidden space-y-6">
+
+      <!-- Raffle Progress Card -->
+      <div class="bg-white rounded-2xl border border-stone-200/90 shadow-sm p-5 sm:p-6">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <div>
+            <h2 class="font-display text-xl sm:text-2xl font-bold text-[#163828]">GSD Monito Monita Raffle</h2>
+            <p id="raffleSubtitle" class="text-sm text-stone-600 mt-0.5">Step up one by one to draw your secret Christmas match.</p>
+          </div>
+          <div class="text-right">
+            <span id="picksProgressText" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-900">
+              0 of 0 picked
+            </span>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full h-2.5 bg-stone-100 rounded-full overflow-hidden">
+          <div id="raffleProgressBar" class="h-full bg-rose-600 rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- Picker Turn Card (Before Drawing) -->
+      <div id="pickerPromptCard" class="bg-white rounded-2xl border border-stone-200/90 shadow-sm p-5 sm:p-6 space-y-5">
+        <div class="flex items-start gap-3.5">
+          <div class="w-11 h-11 rounded-xl bg-rose-50 border border-rose-200 flex items-center justify-center shrink-0">
+            <i data-lucide="ticket" class="w-5 h-5 text-rose-600"></i>
+          </div>
+          <div>
+            <h3 class="text-base sm:text-lg font-bold text-stone-900">Your Turn to Pick</h3>
+            <p class="text-xs sm:text-sm text-stone-600 mt-0.5">Enter your own code name so the system guarantees you won't draw yourself.</p>
+          </div>
+        </div>
+
+        <form id="drawForm" class="space-y-4" novalidate>
+          <div>
+            <label for="pickerCodeInput" class="block text-sm font-semibold text-stone-800 mb-1.5">
+              Your Registered Code Name
+            </label>
+            <input
+              id="pickerCodeInput"
+              type="text"
+              autocomplete="off"
+              placeholder="Type your code name..."
+              class="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-stone-50/50 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent transition text-sm sm:text-base"
+            />
+          </div>
+
+          <div id="drawError" class="hidden rounded-xl bg-rose-50 border border-rose-200 px-3.5 py-2.5 text-sm text-rose-700 flex items-center gap-2">
+            <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
+            <span id="drawErrorText"></span>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <button
+              type="submit"
+              class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-rose-600 hover:bg-rose-700 active:scale-[0.99] text-white font-semibold text-sm sm:text-base shadow-sm transition cursor-pointer"
+            >
+              <i data-lucide="shuffle" class="w-4 h-4"></i>
+              Draw Random Pick
+            </button>
+
+            <button
+              id="blindDrawBtn"
+              type="button"
+              class="inline-flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl border border-stone-300 bg-white hover:bg-stone-50 text-stone-700 font-medium text-sm transition cursor-pointer"
+            >
+              <i data-lucide="dices" class="w-4 h-4"></i>
+              Quick Blind Pick
+            </button>
+          </div>
+          <p class="text-xs text-stone-500">Use <strong>Quick Blind Pick</strong> if you just want the system to draw the next random unassigned person without typing your name.</p>
+        </form>
+      </div>
+
+      <!-- Spinning / Drawing Animation Card -->
+      <div id="drawingAnimCard" class="hidden bg-white rounded-2xl border border-stone-200/90 shadow-sm p-8 sm:p-10 text-center space-y-4">
+        <div class="w-16 h-16 mx-auto rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center animate-draw">
+          <i data-lucide="gift" class="w-8 h-8"></i>
+        </div>
+        <h3 class="font-display text-xl font-bold text-[#163828]">Picking a random match...</h3>
+        <p class="text-sm text-stone-500">Shuffling the secret gift box</p>
+      </div>
+
+      <!-- Reveal Card (Shown briefly to the current picker) -->
+      <div id="revealCard" class="hidden bg-white rounded-2xl border-2 border-emerald-700/30 shadow-md overflow-hidden">
+        <div class="bg-[#163828] px-5 sm:px-6 py-4 text-white flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="party-popper" class="w-5 h-5 text-amber-300"></i>
+            <span class="text-sm font-semibold uppercase tracking-wider text-emerald-100">Your Secret Match</span>
+          </div>
+          <span id="revealPickerTag" class="text-xs bg-emerald-800 px-2.5 py-1 rounded-full text-emerald-100"></span>
+        </div>
+
+        <div class="p-5 sm:p-6 space-y-5">
+          <div class="text-center py-3 px-4 rounded-2xl bg-amber-50/70 border border-amber-200/80">
+            <p class="text-xs font-semibold uppercase tracking-wider text-amber-800 mb-1">You Picked</p>
+            <p id="revealedCodeName" class="font-display text-2xl sm:text-3xl font-bold text-[#163828]"></p>
+          </div>
+
+          <div class="rounded-2xl bg-stone-50 border border-stone-200 p-4 space-y-3">
+            <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-stone-500">
+              <i data-lucide="scroll-text" class="w-4 h-4 text-rose-600"></i>
+              Their Wish List
+            </div>
+            <p id="revealedWishList" class="text-sm sm:text-base text-stone-800 whitespace-pre-wrap leading-relaxed"></p>
+            <div id="revealedImageWrap" class="hidden pt-2 border-t border-stone-200/80 space-y-2">
+              <p class="text-xs font-semibold uppercase tracking-wider text-stone-500 flex items-center gap-1.5">
+                <i data-lucide="image" class="w-3.5 h-3.5 text-[#163828]"></i>
+                Attached Screenshot
+              </p>
+              <img id="revealedWishImage" src="" alt="Attached wish list screenshot" class="max-h-72 max-w-full h-auto rounded-xl border border-stone-200 shadow-xs mx-auto" />
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1">
+            <p class="text-xs text-stone-500">Take a screenshot or note it down before hiding!</p>
+            <button
+              id="hideAndNextBtn"
+              type="button"
+              class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#163828] hover:bg-[#1f4d38] text-white font-semibold text-sm sm:text-base shadow-sm transition cursor-pointer"
+            >
+              <i data-lucide="eye-off" class="w-4 h-4"></i>
+              Hide &amp; Next Person
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- All Picks Complete Card -->
+      <div id="allCompleteCard" class="hidden bg-white rounded-2xl border border-stone-200/90 shadow-sm p-6 sm:p-8 text-center space-y-5">
+        <div class="w-16 h-16 mx-auto rounded-2xl bg-emerald-100 text-[#163828] flex items-center justify-center animate-float">
+          <i data-lucide="check-circle-2" class="w-9 h-9"></i>
+        </div>
+        <div class="space-y-1.5 max-w-md mx-auto">
+          <h3 class="font-display text-2xl font-bold text-[#163828]">Merry Christmas! All Picks Complete!</h3>
+          <p class="text-sm text-stone-600">Everyone in GSD has drawn their Monito / Monita. Keep it a secret until gift-giving day!</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+          <button
+            id="hostRevealAllBtn"
+            type="button"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-stone-300 bg-white hover:bg-stone-50 text-stone-800 font-semibold text-sm transition cursor-pointer"
+          >
+            <i data-lucide="list-checks" class="w-4 h-4"></i>
+            Host: View All Pairings
+          </button>
+          <button
+            id="playAgainBtn"
+            type="button"
+            class="hidden w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#163828] hover:bg-[#1f4d38] text-white font-semibold text-sm transition cursor-pointer"
+          >
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+            Start New Monito Monita
+          </button>
+        </div>
+      </div>
+
+      <!-- Host All Pairings Panel (Hidden unless confirmed) -->
+      <div id="hostPairingsCard" class="hidden bg-white rounded-2xl border border-stone-200/90 shadow-sm overflow-hidden">
+        <div class="px-5 py-3.5 bg-stone-100 border-b border-stone-200 flex items-center justify-between">
+          <h3 class="font-semibold text-sm text-stone-800 flex items-center gap-2">
+            <i data-lucide="shield-alert" class="w-4 h-4 text-amber-600"></i>
+            Host Summary — All Pairings
+          </h3>
+          <button id="closeHostPairingsBtn" type="button" class="text-xs font-medium text-stone-600 hover:text-stone-900 cursor-pointer">
+            Hide
+          </button>
+        </div>
+        <div id="hostPairingsList" class="divide-y divide-stone-100"></div>
+      </div>
+    </section>
+
+    <!-- ADMIN PANEL (Only visible when authenticated as Admin) -->
+    <section id="adminPanel" class="hidden bg-white rounded-2xl border-2 border-amber-500/40 shadow-md overflow-hidden">
+      <div class="bg-amber-950 px-5 sm:px-6 py-4 text-white flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2.5">
+          <i data-lucide="shield-check" class="w-5 h-5 text-amber-300"></i>
+          <div>
+            <h2 class="font-display text-lg font-bold">Admin Participant Manager</h2>
+            <p class="text-xs text-amber-200/80">Edit or delete registered code names and wish lists</p>
+          </div>
+        </div>
+        <button id="adminLogoutBtn" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-800/80 hover:bg-amber-800 text-amber-50 text-xs font-semibold transition cursor-pointer">
+          <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+          Lock &amp; Hide
+        </button>
+      </div>
+
+      <div id="adminEmptyState" class="hidden p-8 text-center text-sm text-stone-500">
+        No participants registered yet.
+      </div>
+
+      <div id="adminParticipantsList" class="divide-y divide-stone-100"></div>
+    </section>
+
+  </main>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 translate-y-2 transition-all duration-300">
+    <div class="bg-[#163828] text-white px-4 py-2.5 rounded-xl shadow-lg text-sm font-medium flex items-center gap-2 border border-emerald-700/60">
+      <i data-lucide="check-circle" class="w-4 h-4 text-emerald-300 shrink-0"></i>
+      <span id="toastText"></span>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div id="confirmModal" class="hidden fixed inset-0 z-50 bg-stone-950/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-5 sm:p-6 shadow-xl border border-stone-200 space-y-4">
+      <div class="flex items-start gap-3">
+        <div id="modalIconWrap" class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+          <i data-lucide="help-circle" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 id="modalTitle" class="font-bold text-stone-900 text-base">Confirm Action</h3>
+          <p id="modalMessage" class="text-sm text-stone-600 mt-1"></p>
+        </div>
+      </div>
+      <div class="flex items-center justify-end gap-2.5 pt-1">
+        <button id="modalCancelBtn" type="button" class="px-4 py-2 rounded-xl border border-stone-300 text-stone-700 hover:bg-stone-50 text-sm font-medium transition cursor-pointer">
+          Cancel
+        </button>
+        <button id="modalConfirmBtn" type="button" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold transition cursor-pointer">
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Login Modal -->
+  <div id="adminLoginModal" class="hidden fixed inset-0 z-50 bg-stone-950/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-5 sm:p-6 shadow-xl border border-stone-200 space-y-4">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center shrink-0">
+          <i data-lucide="key-round" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 class="font-bold text-stone-900 text-base">Admin Login</h3>
+          <p class="text-xs text-stone-500 mt-0.5">Enter the admin password to manage participants.</p>
+        </div>
+      </div>
+
+      <form id="adminLoginForm" class="space-y-3.5" novalidate>
+        <div>
+          <label for="adminPasswordInput" class="block text-xs font-semibold uppercase tracking-wider text-stone-600 mb-1.5">
+            Password
+          </label>
+          <input
+            id="adminPasswordInput"
+            type="password"
+            autocomplete="current-password"
+            placeholder="Enter password..."
+            class="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-stone-50/50 text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#163828] focus:border-transparent text-sm"
+          />
+        </div>
+
+        <div id="adminLoginError" class="hidden rounded-xl bg-rose-50 border border-rose-200 px-3 py-2 text-xs text-rose-700 flex items-center gap-2">
+          <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
+          <span>Incorrect password. Please try again.</span>
+        </div>
+
+        <div class="flex items-center justify-end gap-2.5 pt-1">
+          <button id="adminLoginCancelBtn" type="button" class="px-4 py-2 rounded-xl border border-stone-300 text-stone-700 hover:bg-stone-50 text-sm font-medium transition cursor-pointer">
+            Cancel
+          </button>
+          <button type="submit" class="px-4 py-2 rounded-xl bg-[#163828] hover:bg-[#1f4d38] text-white text-sm font-semibold transition cursor-pointer">
+            Unlock
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Edit Participant Modal -->
+  <div id="editParticipantModal" class="hidden fixed inset-0 z-50 bg-stone-950/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-xl border border-stone-200 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-stone-900 text-base flex items-center gap-2">
+          <i data-lucide="pencil" class="w-4 h-4 text-[#163828]"></i>
+          Edit Participant
+        </h3>
+        <button id="editModalCloseBtn" type="button" class="text-stone-400 hover:text-stone-700 cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="editParticipantForm" class="space-y-4" novalidate>
+        <div>
+          <label for="editCodeNameInput" class="block text-sm font-semibold text-stone-800 mb-1.5">Code Name</label>
+          <input
+            id="editCodeNameInput"
+            type="text"
+            maxlength="40"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-stone-50/50 text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#163828] text-sm"
+          />
+        </div>
+
+        <div>
+          <label for="editWishListInput" class="block text-sm font-semibold text-stone-800 mb-1.5">Wish List</label>
+          <textarea
+            id="editWishListInput"
+            rows="4"
+            maxlength="400"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 bg-stone-50/50 text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#163828] text-sm resize-y"
+          ></textarea>
+        </div>
+
+        <div>
+          <label for="editWishImageInput" class="block text-sm font-semibold text-stone-800 mb-1.5">Screenshot</label>
+          <div class="flex flex-wrap items-center gap-2.5">
+            <label for="editWishImageInput" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-stone-300 bg-stone-50 hover:bg-stone-100 text-stone-700 text-xs font-medium cursor-pointer">
+              <i data-lucide="image-plus" class="w-3.5 h-3.5"></i>
+              Replace / Add Screenshot
+            </label>
+            <input id="editWishImageInput" type="file" accept="image/*" class="hidden" />
+            <button id="editRemoveImageBtn" type="button" class="hidden inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-medium cursor-pointer">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              Remove
+            </button>
+          </div>
+          <div id="editImagePreviewWrap" class="hidden mt-2.5">
+            <img id="editImagePreview" src="" alt="Participant screenshot preview" class="max-h-36 max-w-full h-auto rounded-xl border border-stone-200" />
+          </div>
+        </div>
+
+        <div id="editFormError" class="hidden rounded-xl bg-rose-50 border border-rose-200 px-3 py-2 text-xs text-rose-700 flex items-center gap-2">
+          <i data-lucide="alert-circle" class="w-4 h-4 shrink-0"></i>
+          <span id="editFormErrorText"></span>
+        </div>
+
+        <div class="flex items-center justify-end gap-2.5 pt-1">
+          <button id="editCancelBtn" type="button" class="px-4 py-2 rounded-xl border border-stone-300 text-stone-700 hover:bg-stone-50 text-sm font-medium transition cursor-pointer">
+            Cancel
+          </button>
+          <button type="submit" class="px-4 py-2 rounded-xl bg-[#163828] hover:bg-[#1f4d38] text-white text-sm font-semibold transition cursor-pointer">
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const STORAGE_KEY = 'monito_monita_state_v1';
+
+      let state = {
+        phase: 'registration', // 'registration' | 'raffle'
+        participants: [],      // [{ id, codeName, wishList, hasPicked }]
+        assignments: {},       // { pickerId: targetId }
+        picksCompleted: 0,
+        activeReveal: null     // { pickerLabel, targetCodeName, targetWishList }
+      };
+
+      const ADMIN_PASS = 'mchp12341234!';
+      let isAdmin = false;
+      let editingParticipantId = null;
+      let pendingWishImage = '';
+      let pendingEditImage = '';
+      let pendingModalAction = null;
+      let toastTimer = null;
+
+      // DOM References
+      const phaseBadge = document.getElementById('phaseBadge');
+      const registeredCountEl = document.getElementById('registeredCount');
+      const countSubtextEl = document.getElementById('countSubtext');
+      const codeNamesContainer = document.getElementById('codeNamesContainer');
+      const mysteryIconsEl = document.getElementById('mysteryIcons');
+
+      const registrationView = document.getElementById('registrationView');
+      const registerForm = document.getElementById('registerForm');
+      const codeNameInput = document.getElementById('codeNameInput');
+      const wishListInput = document.getElementById('wishListInput');
+      const wishCharCount = document.getElementById('wishCharCount');
+      const wishImageInput = document.getElementById('wishImageInput');
+      const wishImageName = document.getElementById('wishImageName');
+      const wishImagePreviewWrap = document.getElementById('wishImagePreviewWrap');
+      const wishImagePreview = document.getElementById('wishImagePreview');
+      const removeWishImageBtn = document.getElementById('removeWishImageBtn');
+      const formError = document.getElementById('formError');
+      const formErrorText = document.getElementById('formErrorText');
+      const startRaffleBtn = document.getElementById('startRaffleBtn');
+
+      const raffleView = document.getElementById('raffleView');
+      const picksProgressText = document.getElementById('picksProgressText');
+      const raffleProgressBar = document.getElementById('raffleProgressBar');
+      const pickerPromptCard = document.getElementById('pickerPromptCard');
+      const drawForm = document.getElementById('drawForm');
+      const pickerCodeInput = document.getElementById('pickerCodeInput');
+      const drawError = document.getElementById('drawError');
+      const drawErrorText = document.getElementById('drawErrorText');
+      const blindDrawBtn = document.getElementById('blindDrawBtn');
+      const drawingAnimCard = document.getElementById('drawingAnimCard');
+      const revealCard = document.getElementById('revealCard');
+      const revealPickerTag = document.getElementById('revealPickerTag');
+      const revealedCodeName = document.getElementById('revealedCodeName');
+      const revealedWishList = document.getElementById('revealedWishList');
+      const revealedImageWrap = document.getElementById('revealedImageWrap');
+      const revealedWishImage = document.getElementById('revealedWishImage');
+      const hideAndNextBtn = document.getElementById('hideAndNextBtn');
+      const allCompleteCard = document.getElementById('allCompleteCard');
+      const hostRevealAllBtn = document.getElementById('hostRevealAllBtn');
+      const playAgainBtn = document.getElementById('playAgainBtn');
+      const hostPairingsCard = document.getElementById('hostPairingsCard');
+      const hostPairingsList = document.getElementById('hostPairingsList');
+      const closeHostPairingsBtn = document.getElementById('closeHostPairingsBtn');
+
+      const adminToggleBtn = document.getElementById('adminToggleBtn');
+      const adminPanel = document.getElementById('adminPanel');
+      const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+      const adminEmptyState = document.getElementById('adminEmptyState');
+      const adminParticipantsList = document.getElementById('adminParticipantsList');
+      const adminLoginModal = document.getElementById('adminLoginModal');
+      const adminLoginForm = document.getElementById('adminLoginForm');
+      const adminPasswordInput = document.getElementById('adminPasswordInput');
+      const adminLoginError = document.getElementById('adminLoginError');
+      const adminLoginCancelBtn = document.getElementById('adminLoginCancelBtn');
+      const editParticipantModal = document.getElementById('editParticipantModal');
+      const editParticipantForm = document.getElementById('editParticipantForm');
+      const editCodeNameInput = document.getElementById('editCodeNameInput');
+      const editWishListInput = document.getElementById('editWishListInput');
+      const editWishImageInput = document.getElementById('editWishImageInput');
+      const editRemoveImageBtn = document.getElementById('editRemoveImageBtn');
+      const editImagePreviewWrap = document.getElementById('editImagePreviewWrap');
+      const editImagePreview = document.getElementById('editImagePreview');
+      const editFormError = document.getElementById('editFormError');
+      const editFormErrorText = document.getElementById('editFormErrorText');
+      const editModalCloseBtn = document.getElementById('editModalCloseBtn');
+      const editCancelBtn = document.getElementById('editCancelBtn');
+
+      const resetBtn = document.getElementById('resetBtn');
+      const toast = document.getElementById('toast');
+      const toastText = document.getElementById('toastText');
+      const confirmModal = document.getElementById('confirmModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalMessage = document.getElementById('modalMessage');
+      const modalCancelBtn = document.getElementById('modalCancelBtn');
+      const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+
+      // Storage helpers
+      function saveState() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch (e) {
+          // Ignore storage errors in restricted environments
+        }
+      }
+
+      function loadState() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed && Array.isArray(parsed.participants)) {
+              state = parsed;
+            }
+          }
+        } catch (e) {
+          // Ignore storage errors
+        }
+      }
+
+      function showToast(msg) {
+        toastText.textContent = msg;
+        toast.classList.remove('opacity-0', 'translate-y-2');
+        toast.classList.add('opacity-100', 'translate-y-0');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toast.classList.remove('opacity-100', 'translate-y-0');
+          toast.classList.add('opacity-0', 'translate-y-2');
+        }, 2800);
+      }
+
+      function openModal(title, message, onConfirm) {
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+        pendingModalAction = onConfirm;
+        confirmModal.classList.remove('hidden');
+      }
+
+      function closeModal() {
+        confirmModal.classList.add('hidden');
+        pendingModalAction = null;
+      }
+
+      // Generate a derangement (no participant picks themselves)
+      function generateDerangement(participants) {
+        const n = participants.length;
+        if (n < 2) return {};
+
+        const ids = participants.map(p => p.id);
+        let targets = [...ids];
+
+        // Fisher-Yates shuffle until no fixed points (derangement)
+        let attempts = 0;
+        do {
+          for (let i = targets.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [targets[i], targets[j]] = [targets[j], targets[i]];
+          }
+          attempts++;
+        } while (targets.some((t, idx) => t === ids[idx]) && attempts < 200);
+
+        // Fallback deterministic rotation if random retries hit edge case
+        if (targets.some((t, idx) => t === ids[idx])) {
+          targets = ids.map((_, idx) => ids[(idx + 1) % n]);
+        }
+
+        const map = {};
+        ids.forEach((id, idx) => {
+          map[id] = targets[idx];
+        });
+        return map;
+      }
+
+      function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+      }
+
+      function compressImageFile(file, callback) {
+        const reader = new FileReader();
+        reader.onload = function (ev) {
+          const img = new Image();
+          img.onload = function () {
+            const maxDim = 900;
+            let w = img.width;
+            let h = img.height;
+            if (w > maxDim || h > maxDim) {
+              if (w > h) {
+                h = Math.round((h * maxDim) / w);
+                w = maxDim;
+              } else {
+                w = Math.round((w * maxDim) / h);
+                h = maxDim;
+              }
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = w;
+            canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, w, h);
+            callback(canvas.toDataURL('image/jpeg', 0.82));
+          };
+          img.onerror = function () {
+            callback('');
+          };
+          img.src = ev.target.result;
+        };
+        reader.onerror = function () {
+          callback('');
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function render() {
+        const count = state.participants.length;
+        registeredCountEl.textContent = String(count);
+
+        // Render registered code names only (wish lists & screenshots remain hidden)
+        mysteryIconsEl.innerHTML = '';
+        if (count > 0) {
+          codeNamesContainer.classList.remove('hidden');
+          state.participants.forEach((p, i) => {
+            const badge = document.createElement('span');
+            badge.className = i % 2 === 0
+              ? 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 border border-red-200 text-red-800 text-xs font-semibold'
+              : 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-[#165b33] text-xs font-semibold';
+            badge.textContent = p.codeName;
+            mysteryIconsEl.appendChild(badge);
+          });
+        } else {
+          codeNamesContainer.classList.add('hidden');
+        }
+
+        // Only Admin can see/click New Event buttons
+        if (isAdmin) {
+          resetBtn.classList.remove('hidden');
+          playAgainBtn.classList.remove('hidden');
+        } else {
+          resetBtn.classList.add('hidden');
+          playAgainBtn.classList.add('hidden');
+        }
+
+        if (state.phase === 'registration') {
+          phaseBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400"></span> Registration';
+          countSubtextEl.textContent = count === 0
+            ? 'Be the first to register'
+            : 'Wish lists & screenshots remain hidden';
+          registrationView.classList.remove('hidden');
+          raffleView.classList.add('hidden');
+          startRaffleBtn.disabled = count < 2;
+        } else {
+          phaseBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-rose-400"></span> Raffle';
+          countSubtextEl.textContent = 'Raffle in progress';
+          registrationView.classList.add('hidden');
+          raffleView.classList.remove('hidden');
+
+          const total = state.participants.length;
+          const picked = state.picksCompleted;
+          picksProgressText.textContent = picked + ' of ' + total + ' picked';
+          const pct = total > 0 ? Math.round((picked / total) * 100) : 0;
+          raffleProgressBar.style.width = pct + '%';
+
+          // Toggle sub-cards in raffle phase
+          drawingAnimCard.classList.add('hidden');
+
+          if (state.activeReveal) {
+            pickerPromptCard.classList.add('hidden');
+            allCompleteCard.classList.add('hidden');
+            revealCard.classList.remove('hidden');
+            revealPickerTag.textContent = state.activeReveal.pickerLabel;
+            revealedCodeName.textContent = state.activeReveal.targetCodeName;
+            revealedWishList.textContent = state.activeReveal.targetWishList || 'No text wish list provided.';
+            if (state.activeReveal.targetWishImage) {
+              revealedWishImage.src = state.activeReveal.targetWishImage;
+              revealedImageWrap.classList.remove('hidden');
+            } else {
+              revealedWishImage.src = '';
+              revealedImageWrap.classList.add('hidden');
+            }
+          } else if (picked >= total && total > 0) {
+            pickerPromptCard.classList.add('hidden');
+            revealCard.classList.add('hidden');
+            allCompleteCard.classList.remove('hidden');
+          } else {
+            pickerPromptCard.classList.remove('hidden');
+            revealCard.classList.add('hidden');
+            allCompleteCard.classList.add('hidden');
+          }
+        }
+
+        renderAdminPanel();
+
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+          window.lucide.createIcons();
+        }
+      }
+
+      function renderAdminPanel() {
+        if (!isAdmin) {
+          adminPanel.classList.add('hidden');
+          return;
+        }
+        adminPanel.classList.remove('hidden');
+        adminParticipantsList.innerHTML = '';
+
+        if (state.participants.length === 0) {
+          adminEmptyState.classList.remove('hidden');
+          return;
+        }
+        adminEmptyState.classList.add('hidden');
+
+        state.participants.forEach((p, idx) => {
+          const row = document.createElement('div');
+          row.className = 'p-4 sm:px-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-stone-50/70 transition';
+          row.innerHTML =
+            '<div class="min-w-0 space-y-1">' +
+              '<div class="flex items-center gap-2 flex-wrap">' +
+                '<span class="text-xs font-semibold text-stone-400">#' + (idx + 1) + '</span>' +
+                '<span class="font-bold text-stone-900 text-sm sm:text-base">' + escapeHtml(p.codeName) + '</span>' +
+                (state.phase === 'raffle'
+                  ? '<span class="text-[11px] px-2 py-0.5 rounded-full font-medium ' + (p.hasPicked ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-100 text-stone-600') + '">' + (p.hasPicked ? 'Picked' : 'Not picked') + '</span>'
+                  : '') +
+              '</div>' +
+              '<p class="text-xs sm:text-sm text-stone-600 whitespace-pre-wrap break-words">' + escapeHtml(p.wishList || 'No text wish list') + '</p>' +
+              (p.wishImage
+                ? '<img src="' + p.wishImage + '" alt="Wish screenshot" class="mt-2 max-h-24 max-w-full h-auto rounded-lg border border-stone-200" />'
+                : '') +
+            '</div>' +
+            '<div class="flex items-center gap-2 shrink-0">' +
+              '<button type="button" data-action="edit" data-id="' + escapeHtml(p.id) + '" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-stone-300 bg-white hover:bg-stone-50 text-stone-700 text-xs font-semibold transition cursor-pointer">' +
+                '<i data-lucide="pencil" class="w-3.5 h-3.5"></i> Edit' +
+              '</button>' +
+              '<button type="button" data-action="delete" data-id="' + escapeHtml(p.id) + '" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold transition cursor-pointer">' +
+                '<i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Delete' +
+              '</button>' +
+            '</div>';
+          adminParticipantsList.appendChild(row);
+        });
+      }
+
+      // Wish list char counter
+      wishListInput.addEventListener('input', () => {
+        wishCharCount.textContent = wishListInput.value.length + ' / 400';
+      });
+
+      // Registration screenshot upload
+      function clearPendingWishImage() {
+        pendingWishImage = '';
+        wishImageInput.value = '';
+        wishImageName.textContent = 'No image selected';
+        wishImagePreview.src = '';
+        wishImagePreviewWrap.classList.add('hidden');
+      }
+
+      wishImageInput.addEventListener('change', () => {
+        const file = wishImageInput.files && wishImageInput.files[0];
+        if (!file) {
+          clearPendingWishImage();
+          return;
+        }
+        wishImageName.textContent = file.name;
+        compressImageFile(file, (dataUrl) => {
+          if (!dataUrl) {
+            showToast('Could not read image file.');
+            clearPendingWishImage();
+            return;
+          }
+          pendingWishImage = dataUrl;
+          wishImagePreview.src = dataUrl;
+          wishImagePreviewWrap.classList.remove('hidden');
+        });
+      });
+
+      removeWishImageBtn.addEventListener('click', clearPendingWishImage);
+
+      // Registration submit
+      registerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        formError.classList.add('hidden');
+
+        const codeName = codeNameInput.value.trim();
+        const wishList = wishListInput.value.trim();
+
+        if (!codeName) {
+          formErrorText.textContent = 'Please enter a code name.';
+          formError.classList.remove('hidden');
+          codeNameInput.focus();
+          return;
+        }
+        if (!wishList && !pendingWishImage) {
+          formErrorText.textContent = 'Please enter a wish list or attach a screenshot.';
+          formError.classList.remove('hidden');
+          wishListInput.focus();
+          return;
+        }
+
+        const duplicate = state.participants.some(
+          p => p.codeName.toLowerCase() === codeName.toLowerCase()
+        );
+        if (duplicate) {
+          formErrorText.textContent = 'That code name is already taken. Please pick a unique one.';
+          formError.classList.remove('hidden');
+          codeNameInput.focus();
+          return;
+        }
+
+        state.participants.push({
+          id: 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+          codeName,
+          wishList,
+          wishImage: pendingWishImage,
+          hasPicked: false
+        });
+
+        // Immediately clear inputs so name, wish list & screenshot are hidden
+        codeNameInput.value = '';
+        wishListInput.value = '';
+        wishCharCount.textContent = '0 / 400';
+        clearPendingWishImage();
+
+        saveState();
+        render();
+        showToast('Registered! Your code name, wish list & screenshot are now hidden.');
+      });
+
+      // Start Raffle button
+      startRaffleBtn.addEventListener('click', () => {
+        if (state.participants.length < 2) return;
+        openModal(
+          'Close Registration & Start Raffle?',
+          'All ' + state.participants.length + ' participants are registered. Once the raffle starts, no new participants can be added.',
+          () => {
+            state.phase = 'raffle';
+            state.assignments = generateDerangement(state.participants);
+            state.picksCompleted = 0;
+            state.activeReveal = null;
+            state.participants.forEach(p => { p.hasPicked = false; });
+            saveState();
+            render();
+            showToast('Raffle started! Let the random picks begin.');
+          }
+        );
+      });
+
+      // Execute a draw with brief animation
+      function executeDraw(picker) {
+        drawError.classList.add('hidden');
+        pickerPromptCard.classList.add('hidden');
+        drawingAnimCard.classList.remove('hidden');
+
+        setTimeout(() => {
+          const targetId = state.assignments[picker.id];
+          const target = state.participants.find(p => p.id === targetId);
+          if (!target) {
+            drawingAnimCard.classList.add('hidden');
+            pickerPromptCard.classList.remove('hidden');
+            drawErrorText.textContent = 'Could not find an unassigned match. Try resetting the event.';
+            drawError.classList.remove('hidden');
+            return;
+          }
+
+          picker.hasPicked = true;
+          state.picksCompleted += 1;
+          state.activeReveal = {
+            pickerLabel: 'Picker: ' + picker.codeName,
+            targetCodeName: target.codeName,
+            targetWishList: target.wishList,
+            targetWishImage: target.wishImage || ''
+          };
+          pickerCodeInput.value = '';
+
+          saveState();
+          render();
+
+          if (window.confetti) {
+            window.confetti({
+              particleCount: 55,
+              spread: 65,
+              origin: { y: 0.6 }
+            });
+          }
+        }, 900);
+      }
+
+      // Named Draw Submit
+      drawForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        drawError.classList.add('hidden');
+
+        const typedName = pickerCodeInput.value.trim();
+        if (!typedName) {
+          drawErrorText.textContent = 'Enter your registered code name, or use Quick Blind Pick.';
+          drawError.classList.remove('hidden');
+          pickerCodeInput.focus();
+          return;
+        }
+
+        const picker = state.participants.find(
+          p => p.codeName.toLowerCase() === typedName.toLowerCase()
+        );
+
+        if (!picker) {
+          drawErrorText.textContent = 'No participant found with that code name. Check spelling and try again.';
+          drawError.classList.remove('hidden');
+          pickerCodeInput.focus();
+          return;
+        }
+
+        if (picker.hasPicked) {
+          drawErrorText.textContent = 'This code name has already drawn a match!';
+          drawError.classList.remove('hidden');
+          return;
+        }
+
+        executeDraw(picker);
+      });
+
+      // Quick Blind Pick (picks next unpicked participant at random)
+      blindDrawBtn.addEventListener('click', () => {
+        drawError.classList.add('hidden');
+        const remaining = state.participants.filter(p => !p.hasPicked);
+        if (remaining.length === 0) return;
+        const randomPicker = remaining[Math.floor(Math.random() * remaining.length)];
+        executeDraw(randomPicker);
+      });
+
+      // Hide reveal & pass to next person
+      hideAndNextBtn.addEventListener('click', () => {
+        state.activeReveal = null;
+        saveState();
+        render();
+        if (state.picksCompleted >= state.participants.length && window.confetti) {
+          window.confetti({
+            particleCount: 90,
+            spread: 80,
+            origin: { y: 0.55 }
+          });
+        }
+      });
+
+      // Host: View All Pairings
+      hostRevealAllBtn.addEventListener('click', () => {
+        openModal(
+          'Reveal All Secret Pairings?',
+          'Make sure everyone is done looking or only the host is viewing the screen.',
+          () => {
+            hostPairingsList.innerHTML = '';
+            state.participants.forEach(picker => {
+              const target = state.participants.find(p => p.id === state.assignments[picker.id]);
+              const row = document.createElement('div');
+              row.className = 'px-5 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm';
+              row.innerHTML =
+                '<div class="flex items-center gap-2 font-semibold text-stone-900">' +
+                  '<span>' + escapeHtml(picker.codeName) + '</span>' +
+                  '<span class="text-stone-400">&rarr;</span>' +
+                  '<span class="text-[#163828]">' + escapeHtml(target ? target.codeName : '—') + '</span>' +
+                '</div>' +
+                '<div class="text-xs text-stone-500 sm:text-right max-w-md truncate">' +
+                  'Wish: ' + escapeHtml(target ? target.wishList : '') +
+                '</div>';
+              hostPairingsList.appendChild(row);
+            });
+            hostPairingsCard.classList.remove('hidden');
+          }
+        );
+      });
+
+      closeHostPairingsBtn.addEventListener('click', () => {
+        hostPairingsCard.classList.add('hidden');
+      });
+
+      // Reset / New Event
+      function triggerReset() {
+        if (!isAdmin) {
+          showToast('Only Admin can start a new event.');
+          return;
+        }
+        openModal(
+          'Start a New GSD Monito Monita?',
+          'This will clear all registered participants, hidden wish lists, and raffle pairings.',
+          () => {
+            state = {
+              phase: 'registration',
+              participants: [],
+              assignments: {},
+              picksCompleted: 0,
+              activeReveal: null
+            };
+            codeNameInput.value = '';
+            wishListInput.value = '';
+            wishCharCount.textContent = '0 / 400';
+            pickerCodeInput.value = '';
+            formError.classList.add('hidden');
+            drawError.classList.add('hidden');
+            hostPairingsCard.classList.add('hidden');
+            saveState();
+            render();
+            showToast('Ready for a fresh GSD Monito Monita!');
+          }
+        );
+      }
+
+      resetBtn.addEventListener('click', triggerReset);
+      playAgainBtn.addEventListener('click', triggerReset);
+
+      // Modal controls
+      modalCancelBtn.addEventListener('click', closeModal);
+      modalConfirmBtn.addEventListener('click', () => {
+        const action = pendingModalAction;
+        closeModal();
+        if (typeof action === 'function') action();
+      });
+
+      // Admin Login & Management
+      adminToggleBtn.addEventListener('click', () => {
+        if (isAdmin) {
+          adminPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          return;
+        }
+        adminPasswordInput.value = '';
+        adminLoginError.classList.add('hidden');
+        adminLoginModal.classList.remove('hidden');
+        adminPasswordInput.focus();
+      });
+
+      adminLoginCancelBtn.addEventListener('click', () => {
+        adminLoginModal.classList.add('hidden');
+      });
+
+      adminLoginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (adminPasswordInput.value === ADMIN_PASS) {
+          isAdmin = true;
+          adminLoginModal.classList.add('hidden');
+          adminPasswordInput.value = '';
+          render();
+          showToast('Admin mode unlocked.');
+          adminPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          adminLoginError.classList.remove('hidden');
+          adminPasswordInput.focus();
+        }
+      });
+
+      adminLogoutBtn.addEventListener('click', () => {
+        isAdmin = false;
+        render();
+        showToast('Admin mode locked. Participant details hidden.');
+      });
+
+      adminParticipantsList.addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-action]');
+        if (!btn) return;
+        const action = btn.getAttribute('data-action');
+        const id = btn.getAttribute('data-id');
+        const participant = state.participants.find(p => p.id === id);
+        if (!participant) return;
+
+        if (action === 'edit') {
+          editingParticipantId = id;
+          editCodeNameInput.value = participant.codeName;
+          editWishListInput.value = participant.wishList;
+          pendingEditImage = participant.wishImage || '';
+          editWishImageInput.value = '';
+          if (pendingEditImage) {
+            editImagePreview.src = pendingEditImage;
+            editImagePreviewWrap.classList.remove('hidden');
+            editRemoveImageBtn.classList.remove('hidden');
+          } else {
+            editImagePreview.src = '';
+            editImagePreviewWrap.classList.add('hidden');
+            editRemoveImageBtn.classList.add('hidden');
+          }
+          editFormError.classList.add('hidden');
+          editParticipantModal.classList.remove('hidden');
+          editCodeNameInput.focus();
+        } else if (action === 'delete') {
+          const inRaffle = state.phase === 'raffle';
+          openModal(
+            'Delete Participant?',
+            inRaffle
+              ? 'Deleting "' + participant.codeName + '" during an active raffle will reset the raffle back to registration so pairings stay valid.'
+              : 'Remove "' + participant.codeName + '" and their wish list from this Monito Monita?',
+            () => {
+              state.participants = state.participants.filter(p => p.id !== id);
+              if (inRaffle) {
+                state.phase = 'registration';
+                state.assignments = {};
+                state.picksCompleted = 0;
+                state.activeReveal = null;
+                state.participants.forEach(p => { p.hasPicked = false; });
+              }
+              saveState();
+              render();
+              showToast('Participant deleted.');
+            }
+          );
+        }
+      });
+
+      function closeEditModal() {
+        editParticipantModal.classList.add('hidden');
+        editingParticipantId = null;
+      }
+
+      editModalCloseBtn.addEventListener('click', closeEditModal);
+      editCancelBtn.addEventListener('click', closeEditModal);
+
+      editWishImageInput.addEventListener('change', () => {
+        const file = editWishImageInput.files && editWishImageInput.files[0];
+        if (!file) return;
+        compressImageFile(file, (dataUrl) => {
+          if (!dataUrl) {
+            showToast('Could not read image file.');
+            return;
+          }
+          pendingEditImage = dataUrl;
+          editImagePreview.src = dataUrl;
+          editImagePreviewWrap.classList.remove('hidden');
+          editRemoveImageBtn.classList.remove('hidden');
+        });
+      });
+
+      editRemoveImageBtn.addEventListener('click', () => {
+        pendingEditImage = '';
+        editWishImageInput.value = '';
+        editImagePreview.src = '';
+        editImagePreviewWrap.classList.add('hidden');
+        editRemoveImageBtn.classList.add('hidden');
+      });
+
+      editParticipantForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        editFormError.classList.add('hidden');
+        const participant = state.participants.find(p => p.id === editingParticipantId);
+        if (!participant) {
+          closeEditModal();
+          return;
+        }
+
+        const newName = editCodeNameInput.value.trim();
+        const newWish = editWishListInput.value.trim();
+        if (!newName) {
+          editFormErrorText.textContent = 'Code name cannot be empty.';
+          editFormError.classList.remove('hidden');
+          editCodeNameInput.focus();
+          return;
+        }
+        if (!newWish && !pendingEditImage) {
+          editFormErrorText.textContent = 'Provide a wish list or a screenshot.';
+          editFormError.classList.remove('hidden');
+          editWishListInput.focus();
+          return;
+        }
+
+        const duplicate = state.participants.some(
+          p => p.id !== editingParticipantId && p.codeName.toLowerCase() === newName.toLowerCase()
+        );
+        if (duplicate) {
+          editFormErrorText.textContent = 'Another participant already uses that code name.';
+          editFormError.classList.remove('hidden');
+          editCodeNameInput.focus();
+          return;
+        }
+
+        participant.codeName = newName;
+        participant.wishList = newWish;
+        participant.wishImage = pendingEditImage;
+        saveState();
+        closeEditModal();
+        render();
+        showToast('Participant updated.');
+      });
+
+      // Init
+      loadState();
+      render();
+    })();
+  </script>
+</body>
+</html>
