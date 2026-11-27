@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GSD Monito Monita — Christmas Gift Exchange &amp; Raffle</title>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
@@ -610,6 +612,21 @@
   </div>
 
   <script>
+  
+  const firebaseConfig = {
+  apiKey: "AIzaSyCOkPTWp8TXF6rP-W8n9AKF1fxBJF0Vvrs",
+  authDomain: "gsd-monito-monita.firebaseapp.com",
+  databaseURL: "https://gsd-monito-monita-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "gsd-monito-monita",
+  storageBucket: "gsd-monito-monita.firebasestorage.app",
+  messagingSenderId: "694810086735",
+  appId: "1:694810086735:web:1a3dc303bbcf8f243cc93a",
+  measurementId: "G-H7D2TNN4GY"
+};
+
+firebase.initializeApp(firebaseConfig);
+const dbRef = firebase.database().ref('gsd_monito_monita');
+
     (function () {
       const STORAGE_KEY = 'monito_monita_state_v1';
 
@@ -706,27 +723,35 @@
       const modalCancelBtn = document.getElementById('modalCancelBtn');
       const modalConfirmBtn = document.getElementById('modalConfirmBtn');
 
-      // Storage helpers
+      // Storage helpers (Firebase Realtime Database)
       function saveState() {
-        try {
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-        } catch (e) {
-          // Ignore storage errors in restricted environments
-        }
+        const sharedState = {
+          phase: state.phase,
+          participants: state.participants,
+          assignments: state.assignments,
+          picksCompleted: state.picksCompleted
+        };
+        dbRef.set(sharedState).catch(() => {
+          showToast('Could not sync to cloud database.');
+        });
       }
 
       function loadState() {
-        try {
-          const raw = localStorage.getItem(STORAGE_KEY);
-          if (raw) {
-            const parsed = JSON.parse(raw);
-            if (parsed && Array.isArray(parsed.participants)) {
-              state = parsed;
-            }
+        dbRef.on('value', (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+            state.phase = data.phase || 'registration';
+            state.participants = Array.isArray(data.participants) ? data.participants : [];
+            state.assignments = data.assignments || {};
+            state.picksCompleted = data.picksCompleted || 0;
+          } else {
+            state.phase = 'registration';
+            state.participants = [];
+            state.assignments = {};
+            state.picksCompleted = 0;
           }
-        } catch (e) {
-          // Ignore storage errors
-        }
+          render();
+        });
       }
 
       function showToast(msg) {
