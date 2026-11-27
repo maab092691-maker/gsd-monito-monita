@@ -15,11 +15,13 @@
   <style>
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: #fdf9f3;
+      background-color: #0e2419;
       background-image:
-        radial-gradient(circle at 12% 18%, rgba(185, 28, 28, 0.05) 0%, transparent 40%),
-        radial-gradient(circle at 88% 12%, rgba(217, 119, 6, 0.06) 0%, transparent 38%),
-        radial-gradient(circle at 82% 85%, rgba(22, 56, 40, 0.06) 0%, transparent 42%);
+        radial-gradient(circle at 15% 15%, rgba(220, 38, 38, 0.16) 0%, transparent 42%),
+        radial-gradient(circle at 85% 18%, rgba(251, 191, 36, 0.14) 0%, transparent 38%),
+        radial-gradient(circle at 50% 85%, rgba(22, 101, 52, 0.28) 0%, transparent 55%),
+        linear-gradient(180deg, #0c2117 0%, #133122 50%, #0f261b 100%);
+      background-attachment: fixed;
       color: #1c2420;
     }
     .font-display {
@@ -41,18 +43,45 @@
     }
     @keyframes snowfall {
       0% { transform: translateY(-10vh) translateX(0px) rotate(0deg); opacity: 0; }
-      15% { opacity: 0.55; }
-      85% { opacity: 0.55; }
-      100% { transform: translateY(105vh) translateX(24px) rotate(180deg); opacity: 0; }
+      12% { opacity: 0.8; }
+      50% { transform: translateY(48vh) translateX(18px) rotate(90deg); opacity: 0.75; }
+      88% { opacity: 0.7; }
+      100% { transform: translateY(108vh) translateX(-12px) rotate(180deg); opacity: 0; }
     }
     .snowflake {
       position: fixed;
-      top: -2rem;
-      color: #c5d6cc;
+      top: -2.5rem;
+      color: rgba(255, 255, 255, 0.85);
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.45);
       user-select: none;
       pointer-events: none;
       z-index: 0;
       animation: snowfall linear infinite;
+    }
+    @keyframes starTwinkle {
+      0%, 100% { opacity: 0.2; transform: scale(0.8); }
+      50% { opacity: 0.95; transform: scale(1.25); }
+    }
+    .bg-star {
+      position: fixed;
+      color: #fde68a;
+      text-shadow: 0 0 10px rgba(251, 191, 36, 0.8);
+      user-select: none;
+      pointer-events: none;
+      z-index: 0;
+      animation: starTwinkle ease-in-out infinite;
+    }
+    @keyframes auroraGlow {
+      0%, 100% { opacity: 0.35; transform: translateY(0px) scale(1); }
+      50% { opacity: 0.6; transform: translateY(-16px) scale(1.06); }
+    }
+    .aurora-orb {
+      position: fixed;
+      border-radius: 9999px;
+      filter: blur(70px);
+      pointer-events: none;
+      z-index: 0;
+      animation: auroraGlow 9s ease-in-out infinite;
     }
     @keyframes twinkle {
       0%, 100% { opacity: 0.65; transform: scale(0.92); }
@@ -82,15 +111,28 @@
 </head>
 <body class="min-h-screen flex flex-col antialiased selection:bg-rose-200 selection:text-rose-950 relative overflow-x-hidden">
 
-  <!-- Subtle Falling Snowflakes -->
+  <!-- Animated Christmas Background: Glowing Orbs, Twinkling Stars & Falling Snow -->
   <div aria-hidden="true" class="pointer-events-none">
-    <span class="snowflake text-base" style="left: 6%; animation-duration: 13s; animation-delay: 0s;">&#10052;</span>
-    <span class="snowflake text-xs" style="left: 18%; animation-duration: 17s; animation-delay: 3s;">&#10053;</span>
-    <span class="snowflake text-sm" style="left: 34%; animation-duration: 15s; animation-delay: 6s;">&#10052;</span>
-    <span class="snowflake text-base" style="left: 52%; animation-duration: 14s; animation-delay: 2s;">&#10053;</span>
-    <span class="snowflake text-xs" style="left: 68%; animation-duration: 18s; animation-delay: 5s;">&#10052;</span>
-    <span class="snowflake text-sm" style="left: 84%; animation-duration: 16s; animation-delay: 1s;">&#10053;</span>
-    <span class="snowflake text-base" style="left: 93%; animation-duration: 14s; animation-delay: 7s;">&#10052;</span>
+    <div class="aurora-orb w-72 h-72 bg-red-600/20 top-12 -left-16" style="animation-delay: 0s;"></div>
+    <div class="aurora-orb w-80 h-80 bg-amber-400/15 top-1/3 -right-20" style="animation-delay: 3s;"></div>
+    <div class="aurora-orb w-96 h-96 bg-emerald-500/20 bottom-0 left-1/4" style="animation-delay: 6s;"></div>
+
+    <span class="bg-star text-xs" style="top: 14%; left: 9%; animation-duration: 3.1s;">&#10022;</span>
+    <span class="bg-star text-sm" style="top: 22%; left: 91%; animation-duration: 2.6s; animation-delay: 0.7s;">&#10022;</span>
+    <span class="bg-star text-xs" style="top: 48%; left: 5%; animation-duration: 3.8s; animation-delay: 1.4s;">&#10022;</span>
+    <span class="bg-star text-sm" style="top: 64%; left: 94%; animation-duration: 2.9s; animation-delay: 0.4s;">&#10022;</span>
+    <span class="bg-star text-xs" style="top: 82%; left: 11%; animation-duration: 3.4s; animation-delay: 1.9s;">&#10022;</span>
+
+    <span class="snowflake text-base" style="left: 4%; animation-duration: 11s; animation-delay: 0s;">&#10052;</span>
+    <span class="snowflake text-xs" style="left: 12%; animation-duration: 15s; animation-delay: 2.5s;">&#10053;</span>
+    <span class="snowflake text-lg" style="left: 22%; animation-duration: 13s; animation-delay: 5s;">&#10052;</span>
+    <span class="snowflake text-xs" style="left: 31%; animation-duration: 17s; animation-delay: 1s;">&#10053;</span>
+    <span class="snowflake text-sm" style="left: 42%; animation-duration: 12s; animation-delay: 4s;">&#10052;</span>
+    <span class="snowflake text-base" style="left: 54%; animation-duration: 14s; animation-delay: 0.8s;">&#10053;</span>
+    <span class="snowflake text-xs" style="left: 63%; animation-duration: 16s; animation-delay: 6.2s;">&#10052;</span>
+    <span class="snowflake text-lg" style="left: 74%; animation-duration: 12.5s; animation-delay: 3.1s;">&#10053;</span>
+    <span class="snowflake text-sm" style="left: 83%; animation-duration: 15.5s; animation-delay: 1.7s;">&#10052;</span>
+    <span class="snowflake text-base" style="left: 92%; animation-duration: 13.5s; animation-delay: 4.8s;">&#10053;</span>
   </div>
 
   <!-- Top Header -->
@@ -131,7 +173,7 @@
   <main class="relative z-10 flex-1 max-w-3xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
 
     <!-- Festive Christmas Lights Divider -->
-    <div class="flex items-center justify-between px-4 py-1.5 rounded-full bg-[#163828]/5 border border-emerald-900/10" aria-hidden="true">
+    <div class="flex items-center justify-between px-5 py-2 rounded-full bg-white/10 backdrop-blur-xs border border-white/15 shadow-sm" aria-hidden="true">
       <span class="w-2.5 h-2.5 rounded-full bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.7)] bulb" style="animation-delay: 0s;"></span>
       <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)] bulb" style="animation-delay: 0.3s;"></span>
       <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 shadow-[0_0_8px_rgba(5,150,105,0.7)] bulb" style="animation-delay: 0.6s;"></span>
@@ -143,8 +185,8 @@
       <span class="w-2.5 h-2.5 rounded-full bg-emerald-600 shadow-[0_0_8px_rgba(5,150,105,0.7)] bulb" style="animation-delay: 0.8s;"></span>
     </div>
 
-    <!-- Status Summary Bar (Shows count & code names only; wish lists & screenshots remain hidden) -->
-    <section aria-label="Registration status" class="bg-white/95 rounded-2xl border border-amber-200/80 shadow-sm p-4 sm:p-5 space-y-3.5">
+    <!-- Status Summary Bar (Shows total count & anonymous badges only; code names, wish lists & screenshots are hidden) -->
+    <section aria-label="Registration status" class="bg-white/95 backdrop-blur-xs rounded-2xl border border-amber-300/60 shadow-lg p-4 sm:p-5">
       <div class="flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-3.5">
           <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-50 to-amber-50 border border-amber-200 flex items-center justify-center shrink-0">
@@ -154,15 +196,14 @@
             <p class="text-xs font-semibold uppercase tracking-wider text-stone-500">GSD Registered Participants</p>
             <div class="flex items-baseline gap-2">
               <span id="registeredCount" class="text-2xl sm:text-3xl font-bold text-[#163828]">0</span>
-              <span id="countSubtext" class="text-xs text-stone-500">Wish lists &amp; screenshots remain hidden</span>
+              <span id="countSubtext" class="text-xs text-stone-500">Code names, wish lists &amp; screenshots are hidden</span>
             </div>
           </div>
         </div>
-      </div>
 
-      <div id="codeNamesContainer" class="hidden pt-3 border-t border-stone-100">
-        <p class="text-[11px] font-semibold uppercase tracking-wider text-stone-400 mb-2">Registered Code Names</p>
-        <div id="mysteryIcons" class="flex items-center gap-2 flex-wrap"></div>
+        <div id="codeNamesContainer" class="hidden">
+          <div id="mysteryIcons" class="flex items-center gap-1.5 flex-wrap" aria-hidden="true"></div>
+        </div>
       </div>
     </section>
 
@@ -262,7 +303,7 @@
         <i data-lucide="shield-check" class="w-5 h-5 text-amber-700 shrink-0 mt-0.5"></i>
         <div>
           <p class="font-semibold">Privacy First</p>
-          <p class="text-amber-900/80 mt-0.5">Once someone registers, only their <strong>code name</strong> appears in the GSD Registered Participants list above—their wish list and screenshot stay completely hidden until the raffle. Only the <strong>Admin</strong> can start the raffle whenever the group is ready (odd or even total, minimum 2 participants).</p>
+          <p class="text-amber-900/80 mt-0.5">Once someone registers, their <strong>code name</strong>, <strong>wish list</strong>, and <strong>screenshot</strong> are immediately hidden—only the total participant count is shown (only the Admin can view registered code names). Only the <strong>Admin</strong> can start the raffle whenever the group is ready (odd or even total, minimum 2 participants).</p>
         </div>
       </div>
     </section>
@@ -876,18 +917,25 @@ const dbRef = firebase.database().ref('gsd_monito_monita');
         const count = state.participants.length;
         registeredCountEl.textContent = String(count);
 
-        // Render registered code names only (wish lists & screenshots remain hidden)
+        // Render anonymous mystery badges only (code names are hidden from non-admins)
         mysteryIconsEl.innerHTML = '';
         if (count > 0) {
           codeNamesContainer.classList.remove('hidden');
-          state.participants.forEach((p, i) => {
+          const maxIcons = Math.min(count, 12);
+          for (let i = 0; i < maxIcons; i++) {
             const badge = document.createElement('span');
             badge.className = i % 2 === 0
-              ? 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 border border-red-200 text-red-800 text-xs font-semibold'
-              : 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-[#165b33] text-xs font-semibold';
-            badge.textContent = p.codeName;
+              ? 'w-7 h-7 rounded-full bg-red-50 border border-red-200 text-red-700 flex items-center justify-center text-xs font-bold'
+              : 'w-7 h-7 rounded-full bg-emerald-50 border border-emerald-200 text-[#165b33] flex items-center justify-center text-xs font-bold';
+            badge.textContent = '?';
             mysteryIconsEl.appendChild(badge);
-          });
+          }
+          if (count > 12) {
+            const extra = document.createElement('span');
+            extra.className = 'text-xs font-semibold text-stone-500 pl-1';
+            extra.textContent = '+' + (count - 12);
+            mysteryIconsEl.appendChild(extra);
+          }
         } else {
           codeNamesContainer.classList.add('hidden');
         }
@@ -910,7 +958,7 @@ const dbRef = firebase.database().ref('gsd_monito_monita');
           phaseBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400"></span> Registration';
           countSubtextEl.textContent = count === 0
             ? 'Be the first to register'
-            : 'Wish lists & screenshots remain hidden';
+            : 'Code names, wish lists & screenshots are hidden';
           registrationView.classList.remove('hidden');
           raffleView.classList.add('hidden');
           startRaffleBtn.disabled = count < 2;
