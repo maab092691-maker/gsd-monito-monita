@@ -248,7 +248,7 @@
               id="startRaffleBtn"
               type="button"
               disabled
-              class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-rose-600 hover:bg-rose-700 disabled:bg-stone-200 disabled:text-stone-400 disabled:cursor-not-allowed text-white font-semibold text-sm sm:text-base shadow-sm transition cursor-pointer"
+              class="hidden inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-rose-600 hover:bg-rose-700 disabled:bg-stone-200 disabled:text-stone-400 disabled:cursor-not-allowed text-white font-semibold text-sm sm:text-base shadow-sm transition cursor-pointer"
             >
               <i data-lucide="sparkles" class="w-4 h-4"></i>
               Start Raffle
@@ -868,13 +868,15 @@ const dbRef = firebase.database().ref('gsd_monito_monita');
           codeNamesContainer.classList.add('hidden');
         }
 
-        // Only Admin can see/click New Event buttons
+        // Only Admin can see/click New Event and Start Raffle buttons
         if (isAdmin) {
           resetBtn.classList.remove('hidden');
           playAgainBtn.classList.remove('hidden');
+          startRaffleBtn.classList.remove('hidden');
         } else {
           resetBtn.classList.add('hidden');
           playAgainBtn.classList.add('hidden');
+          startRaffleBtn.classList.add('hidden');
         }
 
         if (state.phase === 'registration') {
@@ -1060,8 +1062,12 @@ const dbRef = firebase.database().ref('gsd_monito_monita');
         showToast('Registered! Your code name, wish list & screenshot are now hidden.');
       });
 
-      // Start Raffle button
+      // Start Raffle button (Admin only)
       startRaffleBtn.addEventListener('click', () => {
+        if (!isAdmin) {
+          showToast('Only Admin can start the raffle.');
+          return;
+        }
         if (state.participants.length < 2) return;
         openModal(
           'Close Registration & Start Raffle?',
