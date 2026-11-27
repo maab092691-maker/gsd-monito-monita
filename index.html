@@ -262,7 +262,7 @@
         <i data-lucide="shield-check" class="w-5 h-5 text-amber-700 shrink-0 mt-0.5"></i>
         <div>
           <p class="font-semibold">Privacy First</p>
-          <p class="text-amber-900/80 mt-0.5">Once someone registers, only their <strong>code name</strong> appears in the GSD Registered Participants list above—their wish list and screenshot stay completely hidden until the raffle. At least <strong>2 participants</strong> are required to start.</p>
+          <p class="text-amber-900/80 mt-0.5">Once someone registers, only their <strong>code name</strong> appears in the GSD Registered Participants list above—their wish list and screenshot stay completely hidden until the raffle. Only the <strong>Admin</strong> can start the raffle whenever the group is ready (odd or even total, minimum 2 participants).</p>
         </div>
       </div>
     </section>
@@ -411,7 +411,7 @@
           <button
             id="hostRevealAllBtn"
             type="button"
-            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-stone-300 bg-white hover:bg-stone-50 text-stone-800 font-semibold text-sm transition cursor-pointer"
+            class="hidden w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-stone-300 bg-white hover:bg-stone-50 text-stone-800 font-semibold text-sm transition cursor-pointer"
           >
             <i data-lucide="list-checks" class="w-4 h-4"></i>
             Host: View All Pairings
@@ -868,15 +868,18 @@ const dbRef = firebase.database().ref('gsd_monito_monita');
           codeNamesContainer.classList.add('hidden');
         }
 
-        // Only Admin can see/click New Event and Start Raffle buttons
+        // Only Admin can see/click New Event, Start Raffle, and View All Pairings
         if (isAdmin) {
           resetBtn.classList.remove('hidden');
           playAgainBtn.classList.remove('hidden');
           startRaffleBtn.classList.remove('hidden');
+          hostRevealAllBtn.classList.remove('hidden');
         } else {
           resetBtn.classList.add('hidden');
           playAgainBtn.classList.add('hidden');
           startRaffleBtn.classList.add('hidden');
+          hostRevealAllBtn.classList.add('hidden');
+          hostPairingsCard.classList.add('hidden');
         }
 
         if (state.phase === 'registration') {
@@ -1068,7 +1071,10 @@ const dbRef = firebase.database().ref('gsd_monito_monita');
           showToast('Only Admin can start the raffle.');
           return;
         }
-        if (state.participants.length < 2) return;
+        if (state.participants.length < 2) {
+          showToast('At least 2 participants are required to start the raffle.');
+          return;
+        }
         openModal(
           'Close Registration & Start Raffle?',
           'All ' + state.participants.length + ' participants are registered. Once the raffle starts, no new participants can be added.',
@@ -1181,8 +1187,12 @@ const dbRef = firebase.database().ref('gsd_monito_monita');
         }
       });
 
-      // Host: View All Pairings
+      // Host: View All Pairings (Admin only)
       hostRevealAllBtn.addEventListener('click', () => {
+        if (!isAdmin) {
+          showToast('Only Admin can view all pairings.');
+          return;
+        }
         openModal(
           'Reveal All Secret Pairings?',
           'Make sure everyone is done looking or only the host is viewing the screen.',
