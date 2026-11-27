@@ -321,25 +321,16 @@
             <span id="drawErrorText"></span>
           </div>
 
-          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <div class="flex items-stretch">
             <button
               type="submit"
-              class="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-rose-600 hover:bg-rose-700 active:scale-[0.99] text-white font-semibold text-sm sm:text-base shadow-sm transition cursor-pointer"
+              class="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-rose-600 hover:bg-rose-700 active:scale-[0.99] text-white font-semibold text-sm sm:text-base shadow-sm transition cursor-pointer"
             >
               <i data-lucide="shuffle" class="w-4 h-4"></i>
               Draw Random Pick
             </button>
-
-            <button
-              id="blindDrawBtn"
-              type="button"
-              class="inline-flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl border border-stone-300 bg-white hover:bg-stone-50 text-stone-700 font-medium text-sm transition cursor-pointer"
-            >
-              <i data-lucide="dices" class="w-4 h-4"></i>
-              Quick Blind Pick
-            </button>
           </div>
-          <p class="text-xs text-stone-500">Use <strong>Quick Blind Pick</strong> if you just want the system to draw the next random unassigned person without typing your name.</p>
+          <p class="text-xs text-stone-500">Each registered code name can only draw <strong>once</strong>.</p>
         </form>
       </div>
 
@@ -675,7 +666,6 @@ const dbRef = firebase.database().ref('gsd_monito_monita');
       const pickerCodeInput = document.getElementById('pickerCodeInput');
       const drawError = document.getElementById('drawError');
       const drawErrorText = document.getElementById('drawErrorText');
-      const blindDrawBtn = document.getElementById('blindDrawBtn');
       const drawingAnimCard = document.getElementById('drawingAnimCard');
       const revealCard = document.getElementById('revealCard');
       const revealPickerTag = document.getElementById('revealPickerTag');
@@ -1138,7 +1128,7 @@ const dbRef = firebase.database().ref('gsd_monito_monita');
 
         const typedName = pickerCodeInput.value.trim();
         if (!typedName) {
-          drawErrorText.textContent = 'Enter your registered code name, or use Quick Blind Pick.';
+          drawErrorText.textContent = 'Please enter your registered code name.';
           drawError.classList.remove('hidden');
           pickerCodeInput.focus();
           return;
@@ -1156,21 +1146,12 @@ const dbRef = firebase.database().ref('gsd_monito_monita');
         }
 
         if (picker.hasPicked) {
-          drawErrorText.textContent = 'This code name has already drawn a match!';
+          drawErrorText.textContent = 'This code name has already picked! Each person can only pick once.';
           drawError.classList.remove('hidden');
           return;
         }
 
         executeDraw(picker);
-      });
-
-      // Quick Blind Pick (picks next unpicked participant at random)
-      blindDrawBtn.addEventListener('click', () => {
-        drawError.classList.add('hidden');
-        const remaining = state.participants.filter(p => !p.hasPicked);
-        if (remaining.length === 0) return;
-        const randomPicker = remaining[Math.floor(Math.random() * remaining.length)];
-        executeDraw(randomPicker);
       });
 
       // Hide reveal & pass to next person
