@@ -288,6 +288,31 @@
         <div class="w-full h-2.5 bg-stone-100 rounded-full overflow-hidden">
           <div id="raffleProgressBar" class="h-full bg-rose-600 rounded-full transition-all duration-500" style="width: 0%"></div>
         </div>
+
+        <!-- Admin Raffle Lock/Unlock Control -->
+        <div id="adminRaffleControlBar" class="hidden mt-4 pt-4 border-t border-stone-100 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-2 text-xs sm:text-sm font-semibold">
+            <span id="raffleLockStatusDot" class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+            <span id="raffleLockStatusText" class="text-stone-700">Raffle Draw: Locked</span>
+          </div>
+          <button
+            id="toggleRaffleLockBtn"
+            type="button"
+            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#163828] hover:bg-[#1f4d38] text-white text-xs sm:text-sm font-semibold shadow-xs transition cursor-pointer"
+          >
+            <i data-lucide="unlock" class="w-4 h-4"></i>
+            <span>Unlock Raffle Draw</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Raffle Locked Card (Shown to users while locked by Admin) -->
+      <div id="raffleLockedCard" class="hidden bg-white rounded-2xl border border-amber-200/90 shadow-sm p-6 sm:p-8 text-center space-y-3">
+        <div class="w-14 h-14 mx-auto rounded-2xl bg-amber-50 border border-amber-200 text-amber-700 flex items-center justify-center">
+          <i data-lucide="lock" class="w-7 h-7"></i>
+        </div>
+        <h3 class="font-display text-xl font-bold text-[#163828]">Raffle Draw is Locked</h3>
+        <p class="text-sm text-stone-600 max-w-md mx-auto">Please wait for the <strong>Admin</strong> to unlock the raffle draw so everyone can pick their Monito / Monita.</p>
       </div>
 
       <!-- Picker Turn Card (Before Drawing) -->
@@ -623,6 +648,7 @@ const dbRef = firebase.database().ref('gsd_monito_monita');
 
       let state = {
         phase: 'registration', // 'registration' | 'raffle'
+        raffleUnlocked: false,
         participants: [],      // [{ id, codeName, wishList, hasPicked }]
         assignments: {},       // { pickerId: targetId }
         picksCompleted: 0,
@@ -661,6 +687,11 @@ const dbRef = firebase.database().ref('gsd_monito_monita');
       const raffleView = document.getElementById('raffleView');
       const picksProgressText = document.getElementById('picksProgressText');
       const raffleProgressBar = document.getElementById('raffleProgressBar');
+      const adminRaffleControlBar = document.getElementById('adminRaffleControlBar');
+      const raffleLockStatusDot = document.getElementById('raffleLockStatusDot');
+      const raffleLockStatusText = document.getElementById('raffleLockStatusText');
+      const toggleRaffleLockBtn = document.getElementById('toggleRaffleLockBtn');
+      const raffleLockedCard = document.getElementById('raffleLockedCard');
       const pickerPromptCard = document.getElementById('pickerPromptCard');
       const drawForm = document.getElementById('drawForm');
       const pickerCodeInput = document.getElementById('pickerCodeInput');
@@ -717,6 +748,7 @@ const dbRef = firebase.database().ref('gsd_monito_monita');
       function saveState() {
         const sharedState = {
           phase: state.phase,
+          raffleUnlocked: Boolean(state.raffleUnlocked),
           participants: state.participants,
           assignments: state.assignments,
           picksCompleted: state.picksCompleted
@@ -731,11 +763,13 @@ const dbRef = firebase.database().ref('gsd_monito_monita');
           const data = snapshot.val();
           if (data) {
             state.phase = data.phase || 'registration';
+            state.raffleUnlocked = Boolean(data.raffleUnlocked);
             state.participants = Array.isArray(data.participants) ? data.participants : [];
             state.assignments = data.assignments || {};
             state.picksCompleted = data.picksCompleted || 0;
           } else {
             state.phase = 'registration';
+            state.raffleUnlocked = false;
             state.participants = [];
             state.assignments = {};
             state.picksCompleted = 0;
@@ -892,10 +926,29 @@ const dbRef = firebase.database().ref('gsd_monito_monita');
           const pct = total > 0 ? Math.round((picked / total) * 100) : 0;
           raffleProgressBar.style.width = pct + '%';
 
+          // Admin lock/unlock control bar
+          if (isAdmin) {
+            adminRaffleControlBar.classList.remove('hidden');
+            if (state.raffleUnlocked) {
+              raffleLockStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500';
+              raffleLockStatusText.textContent = 'Raffle Draw: Unlocked (Users can pick)';
+              toggleRaffleLockBtn.className = 'inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs sm:text-sm font-semibold shadow-xs transition cursor-pointer';
+              toggleRaffleLockBtn.innerHTML = '<i data-lucide="lock" class="w-4 h-4"></i><span>Lock Raffle Draw</span>';
+            } else {
+              raffleLockStatusDot.className = 'w-2.5 h-2.5 rounded-full bg-amber-500';
+              raffleLockStatusText.textContent = 'Raffle Draw: Locked (Waiting for Admin)';
+              toggleRaffleLockBtn.className = 'inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#163828] hover:bg-[#1f4d38] text-white text-xs sm:text-sm font-semibold shadow-xs transition cursor-pointer';
+              toggleRaffleLockBtn.innerHTML = '<i data-lucide="unlock" class="w-4 h-4"></i><span>Unlock Raffle Draw</span>';
+            }
+          } else {
+            adminRaffleControlBar.classList.add('hidden');
+          }
+
           // Toggle sub-cards in raffle phase
           drawingAnimCard.classList.add('hidden');
 
           if (state.activeReveal) {
+            raffleLockedCard.classList.add('hidden');
             pickerPromptCard.classList.add('hidden');
             allCompleteCard.classList.add('hidden');
             revealCard.classList.remove('hidden');
@@ -910,10 +963,17 @@ const dbRef = firebase.database().ref('gsd_monito_monita');
               revealedImageWrap.classList.add('hidden');
             }
           } else if (picked >= total && total > 0) {
+            raffleLockedCard.classList.add('hidden');
             pickerPromptCard.classList.add('hidden');
             revealCard.classList.add('hidden');
             allCompleteCard.classList.remove('hidden');
+          } else if (!state.raffleUnlocked) {
+            raffleLockedCard.classList.remove('hidden');
+            pickerPromptCard.classList.add('hidden');
+            revealCard.classList.add('hidden');
+            allCompleteCard.classList.add('hidden');
           } else {
+            raffleLockedCard.classList.add('hidden');
             pickerPromptCard.classList.remove('hidden');
             revealCard.classList.add('hidden');
             allCompleteCard.classList.add('hidden');
@@ -1070,6 +1130,7 @@ const dbRef = firebase.database().ref('gsd_monito_monita');
           'All ' + state.participants.length + ' participants are registered. Once the raffle starts, no new participants can be added.',
           () => {
             state.phase = 'raffle';
+            state.raffleUnlocked = false;
             state.assignments = generateDerangement(state.participants);
             state.picksCompleted = 0;
             state.activeReveal = null;
@@ -1121,10 +1182,26 @@ const dbRef = firebase.database().ref('gsd_monito_monita');
         }, 900);
       }
 
+      // Admin: Lock / Unlock Raffle Draw
+      toggleRaffleLockBtn.addEventListener('click', () => {
+        if (!isAdmin) {
+          showToast('Only Admin can lock or unlock the raffle draw.');
+          return;
+        }
+        state.raffleUnlocked = !state.raffleUnlocked;
+        saveState();
+        render();
+        showToast(state.raffleUnlocked ? 'Raffle draw unlocked for everyone!' : 'Raffle draw locked.');
+      });
+
       // Named Draw Submit
       drawForm.addEventListener('submit', (e) => {
         e.preventDefault();
         drawError.classList.add('hidden');
+        if (!state.raffleUnlocked) {
+          showToast('Raffle draw is currently locked by Admin.');
+          return;
+        }
 
         const typedName = pickerCodeInput.value.trim();
         if (!typedName) {
@@ -1215,6 +1292,7 @@ const dbRef = firebase.database().ref('gsd_monito_monita');
           () => {
             state = {
               phase: 'registration',
+              raffleUnlocked: false,
               participants: [],
               assignments: {},
               picksCompleted: 0,
